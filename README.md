@@ -192,8 +192,9 @@ there is no way to directly specify it, eg. not in package.json but indirectly, 
     14 npx nx g @nxlv/python:poetry-project report-generator --directory=apps/python/report-generator
 
     15 npm install --save-dev @nx/react 
-    16 npx nx generate @nx/react:app marketing-website --directory=apps/react/marketing-website
-    17 npx nx generate @nx/react:app sales-dashboard --directory=apps/react/sales-dashboard
+    16 npx nx generate @nx/react:app marketing-website --directory=apps/react/marketing-website --e2eTestRunner=cypress --componentTestRunner=cypress
+    17 npx nx generate @nx/react:app sales-dashboard --directory=apps/react/sales-dashboard --e2eTestRunner=cypress --componentTestRunner=cypress
+
     18 npx nx generate @nx/react:library auth --directory=libs/react/auth
     19 npx nx generate @nx/react:library ui-shared --directory=libs/react/ui-shared
 ```
