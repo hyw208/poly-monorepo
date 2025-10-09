@@ -196,7 +196,10 @@ there is no way to directly specify it, eg. not in package.json but indirectly, 
     17 npx nx generate @nx/react:app sales-dashboard --directory=apps/react/sales-dashboard --e2eTestRunner=cypress --componentTestRunner=cypress
 
     18 npx nx generate @nx/react:library auth --directory=libs/react/auth
-    19 npx nx generate @nx/react:library ui-shared --directory=libs/react/ui-shared
+    19 
+    20 npx nx generate @nx/react:library ui-shared --directory=libs/react/ui-shared
+    21 npx nx generate @nx/react:cypress-component-configuration --project=ui-shared 
+  --generateTests
 ```
 
   Important Notes After Generation:
