@@ -1,0 +1,14 @@
+pluginManagement {
+  plugins {
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'org.jetbrains.kotlin.plugin.spring' version "${kotlinVersion}"
+    id 'org.jetbrains.kotlin.jvm' version "${kotlinVersion}"
+    id 'io.github.khalilou88.jnxplus' version "${jnxplusGradlePluginVersion}"
+  }
+}
+rootProject.name = 'poly-monorepo'
+include(':libs:java:elastic')
+include(':apps:java:facility-service')
+include(':libs:java:core-domain')
+include(':apps:java:inventory-service')

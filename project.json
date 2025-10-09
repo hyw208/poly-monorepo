@@ -1,0 +1,6 @@
+{
+  "name": "poly-monorepo",
+  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "// targets": "to see all targets run: nx show project poly-monorepo --web",
+  "targets": {}
+}

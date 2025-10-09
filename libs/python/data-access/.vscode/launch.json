@@ -1,0 +1,13 @@
+{
+     "version": "0.2.0",
+     "configurations": [
+         {
+             "name": "Python: Debug hello.py",
+             "type": "python",
+             "request": "launch",
+             "program": "${workspaceFolder}/data_access/hello.py",
+             "console": "integratedTerminal",
+             "justMyCode": true
+         }
+     ]
+}

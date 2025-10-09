@@ -1,0 +1,9 @@
+{
+  "name": "sales-dashboard",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/react/sales-dashboard/src",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project sales-dashboard --web",
+  "targets": {}
+}

@@ -1,96 +1,209 @@
-# PolyMonorepo
+## Polyglot Monorepo Structure
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
-
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
-
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
-
-## Run tasks
-
-To run tasks with Nx use:
-
-```sh
-npx nx <target> <project-name>
+```
+/polyglot-monorepo/
+├── .github/                      # CI/CD workflows (e.g., GitHub Actions)
+│   └── workflows/
+│       └── ci.yml
+├── apps/                         # Contains all the deployable applications
+│   ├── java/
+│   │   ├── inventory-service/
+│   │   │   ├── Dockerfile  # Dockerfile for the Inventory Service
+│   │   │   ├── pom.xml
+│   │   │   └── src/
+│   │   │       ├── main/
+│   │   │       │   └── java/
+│   │   │       │   └── resources/
+│   │   │       │       └── db/
+│   │   │       │           └── changelog/
+│   │   │       │               └── db.changelog-master.xml     # Liquidbase 
+|   |   |       |               |── v1.0/
+|   |   |       |                   |── 01-create-orders-table.xml
+│   │   │       └── test/
+│   │   │           └── java/
+│   │   └── order-processing/
+│   │       ├── Dockerfile  # Dockerfile for the Inventory Service
+│   │       ├── pom.xml
+│   │       └── src/
+│   │           ├── main/
+│   │           │   └── java/
+│   │           └── test/
+│   │               └── java/
+│   ├── python/
+│   │   ├── data-pipeline/
+│   │   │   ├── Dockerfile  # Dockerfile 
+│   │   │   ├── src/
+│   │   │   │   └── main.py
+│   │   │   └── tests/
+│   │   │       └── test_main.py
+│   │   ├── report-generator/
+│   │   │   ├── src/
+│   │   │   │   └── main.py
+│   │   │   └── tests/
+│   │   │       └── test_main.py
+│   │   └── data-validator/
+│   │       ├── src/
+│   │       │   └── main.py
+│   │       └── tests/
+│   │           └── test_main.py
+│   └── react/
+│       ├── marketing-website/
+│       │   ├── Dockerfile  # Dockerfile 
+│       │   └── src/
+│       ├── marketing-website-e2e/  # Cypress E2E tests for marketing-website
+│       │   └── cypress/
+│       ├── sales-dashboard/
+│       │   └── src/
+│       └── sales-dashboard-e2e/    # Cypress E2E tests for sales-dashboard
+│           └── cypress/
+├── docs/                         # Project documentation
+│   └── architecture.md
+├── kube/                         # Kubernetes deployment manifests
+│   ├── dev/
+│   └── prod/
+├── libs/                         # Shared libraries and packages
+│   ├── java/
+│   │   ├── core-domain/
+│   │   │   ├── pom.xml
+│   │   │   └── src/
+│   │   │       ├── main/
+│   │   │       │   └── java/
+│   │   │       └── test/
+│   │   │           └── java/
+│   │   └── database-connector/
+│   │       ├── pom.xml
+│   │       └── src/
+│   │           ├── main/
+│   │           │   └── java/
+│   │           └── test/
+│   │               └── java/
+│   ├── python/                     # Shared Python libraries
+│   │   └── data-access/
+│   │       ├── src/
+│   │       │   └── db.py
+│   │       └── tests/
+│   │           └── test_db.py
+│   ├── react/
+│   │   ├── auth/
+│   │   │   └── src/
+│   │   └── ui-shared/
+│   │       └── src/
+│   │           └── components/
+│   │               └── Button/
+│   │                   ├── Button.cy.tsx  # Cypress component test for Button
+│   │                   ├── Button.tsx
+│   │                   └── index.ts
+├── scripts/                      # General purpose scripts
+│   ├── deploy/
+│   └── test/
+├── test-suites/                  # For integration, performance, and security tests
+│   ├── jmeter/                   # Performance and load testing (JMeter)
+│       ├── inventory-service/
+│       │   └── api-tests.jmx
+│       └── order-processing/
+│           └── regression-suite.jmx
+│   ├── k6/                       # Performance and load testing (k6 scripts)
+│   ├── pact/                     # Consumer-driven contract tests
+│   ├── postman/                  # API regression tests (Postman collections)
+│   ├── playwright/               # Cross-application E2E browser tests
+│   └── security/                 # Security scanning scripts (e.g., OWASP ZAP)
+├── tools/                        # Workspace-specific tools and build scripts
+│   └── build-scripts/
+├── nx.json                       # Nx workspace configuration
+├── package.json                  # Project dependencies and scripts
+├── pom.xml                       # Parent POM for Java dependency management
+└── tsconfig.base.json            # Base TypeScript configuration
 ```
 
-For example:
 
-```sh
-npx nx build myproject
+## Need to make sure  
+1. that build and test tools for java, react and python can support the folder structure
+2. can build and test only affected
+3. 
+
+
+## How to express dependency btw react UI consuming backend Java app?
+there is no way to directly specify it, eg. not in package.json but indirectly, if we generate a TypeScript client for your order-processing Java API, and you place it in an Nx library like libs/react/api-clients/order-processing-api. Your React UI's package.json (e.g., apps/react/sales-dashboard/package.json) would then include a dependency on this generated client below. So, while you don't depend on the Java app itself in package.json, you depend on a JavaScript/TypeScript representation of its API, which is generated from its contract. This is the correct and standard way to manage such cross-language dependencies in a package.json context.
+```
+1 {
+2   "name": "sales-dashboard",
+3   "version": "0.0.1",
+4   "dependencies": {
+5     "react": "^18.2.0",
+6     "react-dom": "^18.2.0",
+7     // ... other React dependencies
+8     "@myorg/order-processing-api-client": "file:../../libs/react/api-clients/order-processing-api"
+9     // Or if published to a private npm registry:
+10     // "@myorg/order-processing-api-client": "^1.0.0"
+11   },
+12   "devDependencies": {
+13     // ...
+14   }
+15 }
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## How to create the folder structure? 
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+1. Using Nx commands to generate the folders is the correct and most efficient way to set up an Nx monorepo, as it automatically configures the projects and integrates them into the workspace.
 
-## Add new projects
+2. Here are the Nx commands you would use to generate the projects and folders according to our finalized structure above, presented one by one.
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+3. First, create the non-Nx managed directories. These are folders that Nx doesn't have specific generators for, but are essential for your monorepo.
+```
+    1 # Create .github workflows directory
+    2 mkdir -p .github/workflows
+    3 
+    4 # Create documentation directory
+    5 mkdir -p docs
+    6 
+    7 # Create Kubernetes configuration directories
+    8 mkdir -p kube/dev kube/int kube/test kube/prod
+    9 
+   10 # Create general scripts directories
+   11 mkdir -p scripts/deploy scripts/test
+   12 
+   13 # Create test-suites directories
+   14 mkdir -p test-suites/jmeter test-suites/k6 test-suites/pact test-suites/postman test-suites/playwright test-suites/security
+   15 
+   16 # Create tools directory
+   17 mkdir -p tools/build-scripts tools/deploy-scripts
+   18 
+   19 # Create Ansible directories
+   20 mkdir -p ansible/inventory ansible/roles/common/tasks ansible/roles/webserver/tasks ansible/playbooks
+```
+4. Next, generate the Nx-managed libraries. These commands will create the library projects and their basic structure, including src/ and tests/ (for Python/Java) or src/ (for React).
+```
+    1 # Init workspace
+    2 npx create-nx-workspace@latest poly-monorepo --preset=apps --nxCloud=skip --interactive=false (init workspace)
+    3 code poly-monorepo
 
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
+    4 npm install --save-dev @jnxplus/nx-gradle 
+    5 npx nx g @jnxplus/nx-gradle:init (install gradle wrapper)
+    
+    6 npx nx g @jnxplus/nx-gradle:application inventory-service --project-name=inventory-service --directory=apps/java
+    7 npx nx g @jnxplus/nx-gradle:application facility-service --project-name=facility-service --directory=apps/java
+    8 npx nx g @jnxplus/nx-gradle:library core-domain --project-name=core-domain --directory=libs/java
+    9 npx nx g @jnxplus/nx-gradle:library elastic --project-name=elastic --directory=libs/java
+
+    10 npm install -D @nxlv/python (install python plugin where poetry manages python)
+    11 npx nx g @nxlv/python:poetry-project data-access --directory=libs/python/data-access
+    12 npx nx g @nxlv/python:poetry-project data-quality --directory=libs/python/data-quality
+    13 npx nx g @nxlv/python:poetry-project data-pipeline --directory=apps/python/data-pipeline
+    14 npx nx g @nxlv/python:poetry-project report-generator --directory=apps/python/report-generator
+
+    15 npm install --save-dev @nx/react 
+    16 npx nx generate @nx/react:app marketing-website --directory=apps/react/marketing-website
+    17 npx nx generate @nx/react:app sales-dashboard --directory=apps/react/sales-dashboard
+    18 npx nx generate @nx/react:library auth --directory=libs/react/auth
+    19 npx nx generate @nx/react:library ui-shared --directory=libs/react/ui-shared
 ```
 
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
+  Important Notes After Generation:
 
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
-
-# Generate a library
-npx nx g @nx/react:lib some-lib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+   * Files: Nx generators create the basic project structure. Files like Dockerfile, pom.xml (within projects), 
+     db.changelog-master.xml, main.py, db.py, Button.tsx, Button.cy.tsx, index.ts, ci.yml, architecture.md, ansible.cfg, *.jmx, 
+     *.yml (inventory/playbooks) are files that you would typically add manually or through other specific generators/scripts 
+     after the initial project generation.
+   * Java Idiomatic Structure: For Java projects, after generation, you would manually adjust the src/ directory to 
+     src/main/java and src/test/java as discussed, and place your pom.xml and Liquibase files accordingly.
+   * Parent POM: Remember to create the root pom.xml manually for centralized Java dependency management.
