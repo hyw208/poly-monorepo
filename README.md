@@ -207,3 +207,12 @@ there is no way to directly specify it, eg. not in package.json but indirectly, 
    * Java Idiomatic Structure: For Java projects, after generation, you would manually adjust the src/ directory to 
      src/main/java and src/test/java as discussed, and place your pom.xml and Liquibase files accordingly.
    * Parent POM: Remember to create the root pom.xml manually for centralized Java dependency management.
+  
+# Note 
+* java facility service app uses java core domain lib and there are 2 ways to build it. 
+  * npx nx build facility-service (nx is smart enough to build core domain on needed basis)
+  * npx nx affected --target=build
+  * npx nx affected:build 
+* building facility service will create a jar file which includes core-domain jar
+* to run facility service, 
+  * npx nx serve facility-service
