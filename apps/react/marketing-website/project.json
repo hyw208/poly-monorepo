@@ -4,6 +4,7 @@
   "sourceRoot": "apps/react/marketing-website/src",
   "projectType": "application",
   "tags": [],
+  "implicitDependencies": ["facility-service"],
   "targets": {
     "build": {
       "executor": "@nx/vite:build",

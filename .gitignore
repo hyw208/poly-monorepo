@@ -46,9 +46,10 @@ Thumbs.db
 
 # Gradle
 .gradle
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+**/build/
+**/bin/
 !gradle/wrapper/gradle-wrapper.jar
+
+# Vite / Vitest cache
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
