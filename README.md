@@ -32,17 +32,17 @@
 │   ├── python/
 │   │   ├── data-pipeline/
 │   │   │   ├── Dockerfile  # Dockerfile 
-│   │   │   ├── src/
+│   │   │   ├── data_pipeline/
 │   │   │   │   └── main.py
 │   │   │   └── tests/
 │   │   │       └── test_main.py
 │   │   ├── report-generator/
-│   │   │   ├── src/
+│   │   │   ├── report_generator/
 │   │   │   │   └── main.py
 │   │   │   └── tests/
 │   │   │       └── test_main.py
 │   │   └── data-validator/
-│   │       ├── src/
+│   │       ├── data_validator/
 │   │       │   └── main.py
 │   │       └── tests/
 │   │           └── test_main.py
@@ -79,7 +79,7 @@
 │   │               └── java/
 │   ├── python/                     # Shared Python libraries
 │   │   └── data-access/
-│   │       ├── src/
+│   │       ├── data_access/
 │   │       │   └── db.py
 │   │       └── tests/
 │   │           └── test_db.py
@@ -115,6 +115,9 @@
 └── tsconfig.base.json            # Base TypeScript configuration
 ```
 
+## TODO
+1. compare @nx/grade vs @jnxplus/nx-gradle (https://www.npmjs.com/package/@jnxplus/nx-gradle) official grade does not have java project generator and jnxplus has bug on dep resolution, eg. npx nx graph --file=output.json. output.json doesn't show full picture but it seems affected:build is able to resolve full deps.
+2. 
 
 ## Need to make sure  
 1. that build and test tools for java, react and python can support the folder structure
@@ -123,13 +126,38 @@
 
 
 ## How to express dependency btw react UI consuming backend Java app?
-If marketing-website ui app uses facility-service, then you can add the following inside apps/react/marketing-website/project.json
+If marketing-website ui app uses facility-service, then you can manually add the following inside apps/react/marketing-website/project.json
 ```
 {
   "name": "marketing-website",
   ...
   "implicitDependencies": ["facility-service"],
 ```
+facility-service has dep on core-domain lib and this dep is expressed in apps/java/facility-service/build.gradle
+```
+dependencies {
+  implementation project(':libs:java:core-domain')
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  ...
+}
+```
+You can visualize the deps using cmd 
+```
+npx nx graph 
+
+or
+
+npx nx graph --affected 
+
+or
+
+npx nx graph --focus=marketing-website
+```
+By the way, when i setup marketing-website-e2e, the dep is set on marketing-website and you can visualize it by running cmd below and increase the dep distance in the ui
+```
+npx nx graph --focus=marketing-website-e2e
+```
+
 
 ## How to create the folder structure? 
 
