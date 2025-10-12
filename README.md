@@ -157,7 +157,7 @@ By the way, when i setup marketing-website-e2e, the dep is set on marketing-webs
 ```
 npx nx graph --focus=marketing-website-e2e
 ```
-
+![Screenshot](deps.png)
 
 ## How to create the folder structure? 
 
