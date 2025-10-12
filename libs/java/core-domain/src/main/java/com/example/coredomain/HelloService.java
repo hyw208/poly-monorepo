@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 public class HelloService {
 
   public String message() {
-    return "Hello World! core -> facility-service -> marketing-website -> hello 2!!";
+    return "Hello World! core -> facility-service -> marketing-website -> hello 3!!";
   }
 }
