@@ -123,23 +123,12 @@
 
 
 ## How to express dependency btw react UI consuming backend Java app?
-there is no way to directly specify it, eg. not in package.json but indirectly, if we generate a TypeScript client for your order-processing Java API, and you place it in an Nx library like libs/react/api-clients/order-processing-api. Your React UI's package.json (e.g., apps/react/sales-dashboard/package.json) would then include a dependency on this generated client below. So, while you don't depend on the Java app itself in package.json, you depend on a JavaScript/TypeScript representation of its API, which is generated from its contract. This is the correct and standard way to manage such cross-language dependencies in a package.json context.
+If marketing-website ui app uses facility-service, then you can add the following inside apps/react/marketing-website/project.json
 ```
-1 {
-2   "name": "sales-dashboard",
-3   "version": "0.0.1",
-4   "dependencies": {
-5     "react": "^18.2.0",
-6     "react-dom": "^18.2.0",
-7     // ... other React dependencies
-8     "@myorg/order-processing-api-client": "file:../../libs/react/api-clients/order-processing-api"
-9     // Or if published to a private npm registry:
-10     // "@myorg/order-processing-api-client": "^1.0.0"
-11   },
-12   "devDependencies": {
-13     // ...
-14   }
-15 }
+{
+  "name": "marketing-website",
+  ...
+  "implicitDependencies": ["facility-service"],
 ```
 
 ## How to create the folder structure? 
