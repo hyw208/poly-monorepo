@@ -117,7 +117,7 @@
 
 ## TODO
 1. compare @nx/grade vs @jnxplus/nx-gradle (https://www.npmjs.com/package/@jnxplus/nx-gradle) official grade does not have java project generator and jnxplus has bug on dep resolution, eg. npx nx graph --file=output.json. output.json doesn't show full picture but it seems affected:build is able to resolve full deps.
-2. 
+2. there is no nx jmeter plugin and best way to approach is to build one similar to nx cypress e2e
 
 ## Need to make sure  
 1. that build and test tools for java, react and python can support the folder structure
