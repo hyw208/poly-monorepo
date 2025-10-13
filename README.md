@@ -122,7 +122,6 @@
 ## Need to make sure  
 1. that build and test tools for java, react and python can support the folder structure
 2. can build and test only affected
-3. 
 
 
 ## How to express dependency btw react UI consuming backend Java app?
@@ -160,12 +159,14 @@ npx nx graph --focus=marketing-website-e2e
 ![Screenshot](deps.png)
 
 ## How to create the folder structure? 
-
 1. Using Nx commands to generate the folders is the correct and most efficient way to set up an Nx monorepo, as it automatically configures the projects and integrates them into the workspace.
+```
+    1 # Init workspace
+    2 npx create-nx-workspace@latest poly-monorepo --preset=apps --nxCloud=skip --interactive=false (init workspace)
+    3 code poly-monorepo
+```
 
-2. Here are the Nx commands you would use to generate the projects and folders according to our finalized structure above, presented one by one.
-
-3. First, create the non-Nx managed directories. These are folders that Nx doesn't have specific generators for, but are essential for your monorepo.
+2. Create the non-Nx managed directories. These are folders that Nx doesn't have specific generators for, but are essential for your monorepo.
 ```
     1 # Create .github workflows directory
     2 mkdir -p .github/workflows
@@ -188,12 +189,9 @@ npx nx graph --focus=marketing-website-e2e
    19 # Create Ansible directories
    20 mkdir -p ansible/inventory ansible/roles/common/tasks ansible/roles/webserver/tasks ansible/playbooks
 ```
-4. Next, generate the Nx-managed libraries. These commands will create the library projects and their basic structure, including src/ and tests/ (for Python/Java) or src/ (for React).
-```
-    1 # Init workspace
-    2 npx create-nx-workspace@latest poly-monorepo --preset=apps --nxCloud=skip --interactive=false (init workspace)
-    3 code poly-monorepo
 
+1. Next, generate the Nx-managed apps/libs. These commands will create the library projects and their basic structures. We should create utility scripts and hide these cmds to bridge potential gaps.
+```
     4 npm install --save-dev @jnxplus/nx-gradle 
     5 npx nx g @jnxplus/nx-gradle:init (install gradle wrapper)
     
@@ -218,16 +216,6 @@ npx nx graph --focus=marketing-website-e2e
     21 npx nx generate @nx/react:cypress-component-configuration --project=ui-shared 
   --generateTests
 ```
-
-  Important Notes After Generation:
-
-   * Files: Nx generators create the basic project structure. Files like Dockerfile, pom.xml (within projects), 
-     db.changelog-master.xml, main.py, db.py, Button.tsx, Button.cy.tsx, index.ts, ci.yml, architecture.md, ansible.cfg, *.jmx, 
-     *.yml (inventory/playbooks) are files that you would typically add manually or through other specific generators/scripts 
-     after the initial project generation.
-   * Java Idiomatic Structure: For Java projects, after generation, you would manually adjust the src/ directory to 
-     src/main/java and src/test/java as discussed, and place your pom.xml and Liquibase files accordingly.
-   * Parent POM: Remember to create the root pom.xml manually for centralized Java dependency management.
   
 # Note 
 * java facility service app uses java core domain lib and there are 2 ways to build it. 
@@ -237,3 +225,25 @@ npx nx graph --focus=marketing-website-e2e
 * building facility service will create a jar file which includes core-domain jar
 * to run facility service, 
   * npx nx serve facility-service
+
+
+# Create Nx Jmeter Plugin (in progress, not working yet)
+1. generate plugin
+   ```
+   npx nx generate @nx/plugin:plugin nx-jmeter --directory=tools/nx-jmeter
+   ```
+2. generate the suite generator
+   ```
+   npx nx generate @poly-monorepo/nx-jmeter:generator suite 
+
+   mkdir -p libs/react/nx-jmeter/src/generators/scaffold/
+   touch libs/react/nx-jmeter/src/generators/scaffold/schema.json
+   touch libs/react/nx-jmeter/src/generators/scaffold/schema.d.ts
+   touch libs/react/nx-jmeter/src/generators/scaffold/index.ts
+
+   mkdir -p libs/react/nx-jmeter/src/generators/scaffold/files/
+   touch libs/react/nx-jmeter/src/generators/scaffold/files/sample.jmx__tmpl__
+
+   touch libs/react/nx-jmeter/src/plugin.json
+   ```
+3. 
