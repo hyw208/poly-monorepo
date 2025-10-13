@@ -190,7 +190,7 @@ npx nx graph --focus=marketing-website-e2e
    20 mkdir -p ansible/inventory ansible/roles/common/tasks ansible/roles/webserver/tasks ansible/playbooks
 ```
 
-1. Next, generate the Nx-managed apps/libs. These commands will create the library projects and their basic structures. We should create utility scripts and hide these cmds to bridge potential gaps.
+3. Next, generate the Nx-managed apps/libs. These commands will create the library projects and their basic structures. We should create utility scripts and hide these cmds to bridge potential gaps.
 ```
     4 npm install --save-dev @jnxplus/nx-gradle 
     5 npx nx g @jnxplus/nx-gradle:init (install gradle wrapper)
