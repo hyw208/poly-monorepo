@@ -140,7 +140,13 @@ dependencies {
   ...
 }
 ```
-You can visualize the deps using cmd 
+
+You can list affected projects
+```
+npx nx show projects --affected
+```
+
+Or you can visualize the deps
 ```
 npx nx graph 
 
@@ -225,7 +231,6 @@ npx nx graph --focus=marketing-website-e2e
 * building facility service will create a jar file which includes core-domain jar
 * to run facility service, 
   * npx nx serve facility-service
-
 
 # Create Nx Jmeter Plugin (in progress, not working yet)
 1. generate plugin
